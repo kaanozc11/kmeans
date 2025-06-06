@@ -9,7 +9,7 @@ import numpy as np
 import unidecode
 import matplotlib.colors as mcolors
 
-st.title("🇹🇷 Türkiye K-means Kümeleme Haritası")
+st.title("🇹🇷 K-Ortalamalar Algoritması ile Türkiye Haritasının Kümelenmesi")
 
 # --- Veri Yükleme ---
 df = pd.read_excel("turkiyemm.xlsx")
