@@ -3,16 +3,21 @@ import streamlit as st
 import pandas as pd
 import geopandas as gpd
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 import matplotlib.pyplot as plt
 import numpy as np
 import unidecode
 import matplotlib.colors as mcolors
+import logging
+logging.getLogger('streamlit.runtime.scriptrunner').setLevel(logging.ERROR)
+
 
 st.title("🇹🇷 K-Ortalamalar Algoritması ile Türkiye Haritasının Kümelenmesi")
 
-# --- Veri Yükleme ---
+# Read the Dataset
 df = pd.read_excel("turkiyemm.xlsx")
+
+#Missing Data Imputation
 missing_values = df.isna().sum()
 print(missing_values)
 for col in df.columns:
@@ -23,21 +28,36 @@ for col in df.columns:
 
 print(df.isna().sum())
 
+#Converting Categorical Data to Numerical with Label Encoder
+label_encoder = LabelEncoder()
+df['most_edu_level'].unique()
+df['most_edu_level']= label_encoder.fit_transform(df['most_edu_level'])
+df['most_edu_level'].unique()
+
+df['most_voted_party'].unique()
+df['most_voted_party']= label_encoder.fit_transform(df['most_voted_party'])
+df['most_voted_party'].unique()
+
+df["region"].unique()
+df['region']= label_encoder.fit_transform(df['region'])
+df['region'].unique()
+
+
 numerical_cols = df.select_dtypes(include=[np.number]).columns.tolist()
 numeric_df = df[numerical_cols].apply(pd.to_numeric, errors='coerce')
 X = numeric_df.dropna()
 df_clean = df.loc[X.index].copy()
 
-numeric_df.isna().sum()
 
-# --- Küme Sayısı Ayarı ---
-k = st.slider("Kaç küme (k) olsun?", 2, 6, 3)
 
-# --- Veriyi Ölçeklendir ---
+#Cluster Slider
+k = st.slider("Kaç küme (k) olsun?", 2, 6, 5)
+
+# --- Normalize the Data ---
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# --- K-means Kümeleme ---
+# --- K-means Clustering ---
 kmeans = KMeans(n_clusters=k, random_state=42)
 df_clean["cluster"] = kmeans.fit_predict(X_scaled)
 
