@@ -83,23 +83,11 @@ ax.axis("off")
 
 st.pyplot(fig)
 
+cluster_summary = df_clean.groupby("cluster")[numerical_cols].mean()
+st.dataframe(cluster_summary)
 
-# Harita verisindeki tüm iller
-geo_names = set(gdf["name_lower"])
 
-# Excel verisindeki tüm iller
-data_names = set(df_clean["country_name_lower"])
-
-# Eksik kalanlar
-missing = geo_names - data_names
-print("Haritada gösterilemeyen iller:", missing)
-print("Excel'deki il isimleri:")
-print(sorted(df["country_name"].unique()))
-
-df["country_name_lower"] = df["country_name"].apply(lambda x: unidecode.unidecode(str(x).lower()))
-geo_names = set(gdf["shapeName"].apply(lambda x: unidecode.unidecode(x.lower())))
-excel_names = set(df["country_name_lower"])
-
-missing_from_excel = geo_names - excel_names
-
-print("Excel'de bulunmayan il isimleri:", missing_from_excel)
+from sklearn.metrics import silhouette_score
+score = silhouette_score(X_scaled, df_clean["cluster"])
+st.write(f"Silhouette Skoru: {score:.2f}")
+print(f"Silhouette Skoru: {score:.2f}")
