@@ -24,7 +24,7 @@ st.set_page_config(layout="wide")
 st.title("🇹🇷 Türkiye'de K-Means Kümelenme Analizi")
 
 # ---Read the Dataset ---
-df = pd.read_excel("turkiyemm.xlsx")
+df = pd.read_excel("turkiyemmm.xlsx")
 st.success("Dataset loaded successfuly .")
 
 # --- Missing Data Imputation ---
